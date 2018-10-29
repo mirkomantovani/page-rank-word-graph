@@ -18,4 +18,4 @@ class UndirectedGraph:
         if i in self.graph:
             if j in self.graph[i]:
                 return self.graph[i][j]
-        return 0
+        return -1
