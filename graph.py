@@ -2,6 +2,9 @@ class UndirectedGraph:
     def __init__(self):
         self.graph = {}
 
+    def __repr__(self):
+        return 'Graph:'+ str(self.graph)
+
     def add_node(self, node):
         if node not in self.graph:
             self.graph[node] = {}
