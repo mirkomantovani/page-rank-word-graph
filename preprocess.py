@@ -11,6 +11,8 @@ class CustomTokenizer:
     def __init__(self, path_stopwords=None, window=1):
         self.path_stopwords = path_stopwords
         self.tags_to_keep = ['NN', 'NNS', 'NNP', 'NNPS', 'JJ']
+
+        # words considered adjacent if at most at length = window, if window = 1 only strictly adjacent words are adj
         self.window = window
         self.stemmer = PorterStemmer()
 
@@ -19,14 +21,39 @@ class CustomTokenizer:
 
         self.stop_words = list(map(lambda x: x[:-1], self.stop_words))
 
+    def extract_ngrams(self, doc_text, document, length =1):
+        ngrams = {}
+        tokens_in_window = []
+        tokens = doc_text.split()
+        for token in tokens:
+            token_split = token.split("_")
+            token = replace_digits(token_split[0]).lower()
+            if token_split[1] not in self.tags_to_keep or token in self.stop_words:
+                tokens_in_window = []
+                continue
+            self.stemmer.stem(token)
+            tokens_in_window.append(token)
+            if len(tokens_in_window) > length:
+                tokens_in_window = tokens_in_window[1:]
+                # considering only length-grams
+            ng = ''
+            if len(tokens_in_window) == length:
+                for t in tokens_in_window:
+                    ng += t+' '
+                ng = ng[:-1]
+            if ng:
+                # define new ngram for document and set to 0 its initial score
+                document.ngrams[ng] = 0
+
+
     """
-    Tokenizes a document
+    Tokenizes a document and builds the word graph
     """
-    def tokenize(self, doc, vocabulary):
+    def tokenize(self, doc_text, vocabulary):
         word_count = {}
         G = graph.UndirectedGraph()
         tokens_in_window = []
-        tokens = doc.split()
+        tokens = doc_text.split()
         for token in tokens:
             token_split = token.split("_")
             token = replace_digits(token_split[0]).lower()

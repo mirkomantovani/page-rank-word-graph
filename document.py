@@ -7,3 +7,5 @@ class Document:
         # UndirectedGraph instance representing the word graph of the document
         self.graph = document_graph
         self.word_count = word_count
+        self.ngrams = {}
+        self.page_rank = {}
