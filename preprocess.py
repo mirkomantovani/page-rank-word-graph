@@ -22,16 +22,16 @@ class CustomTokenizer:
         self.stop_words = list(map(lambda x: x[:-1], self.stop_words))
 
     def extract_ngrams(self, doc_text, document, length =1):
-        ngrams = {}
         tokens_in_window = []
         tokens = doc_text.split()
         for token in tokens:
             token_split = token.split("_")
-            token = replace_digits(token_split[0]).lower()
+            # token = replace_digits(token_split[0]).lower() nope, digits are needed for instance for the word P2P
+            token = token_split[0].lower()
             if token_split[1] not in self.tags_to_keep or token in self.stop_words:
                 tokens_in_window = []
                 continue
-            self.stemmer.stem(token)
+            token = self.stemmer.stem(token)
             tokens_in_window.append(token)
             if len(tokens_in_window) > length:
                 tokens_in_window = tokens_in_window[1:]
@@ -45,6 +45,19 @@ class CustomTokenizer:
                 # define new ngram for document and set to 0 its initial score
                 document.ngrams[ng] = 0
 
+    def extract_gold_ngrams(self, doc_text, document):
+        lines = [line.rstrip('\n') for line in doc_text]
+        for line in lines:
+            tokens = line.split(' ')
+            ng = ''
+        for token in tokens:
+            t = self.stemmer.stem(token.lower())
+            ng += t+' '
+        ng = ng[:-1]
+        if ng:
+            # define new ngram for document and set to 0 its initial score
+            document.gold_ngrams.append(ng)
+
 
     """
     Tokenizes a document and builds the word graph
@@ -56,11 +69,12 @@ class CustomTokenizer:
         tokens = doc_text.split()
         for token in tokens:
             token_split = token.split("_")
-            token = replace_digits(token_split[0]).lower()
+            # token = replace_digits(token_split[0]).lower() nope, digits are needed for instance for the word P2P
+            token = token_split[0].lower()
             if token_split[1] not in self.tags_to_keep or token in self.stop_words:
                 tokens_in_window = []
                 continue
-            self.stemmer.stem(token)
+            token = self.stemmer.stem(token)
             if not token:
                 continue
             if token not in word_count:

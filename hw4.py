@@ -2,10 +2,12 @@
 
 import preprocess
 import page_rank
+import statistics
 import os
 
 STOP_WORDS_PATH = "./stopwords.txt"
 DOCS_PATH = './www/abstracts/'
+GOLD_PATH = './www/gold/'
 
 documents = []
 vocabulary = {}
@@ -43,12 +45,21 @@ for filename in list(map(str, sorted(list(map(int, [i for i in os.listdir(DOCS_P
         # Computing scores
         print('Point 3: computing scores')
         for ng in current_doc.ngrams:
+            print(ng)
             words = ng.split(' ')
+            print(words)
             for word in words:
                 if word in current_doc.page_rank:
                     current_doc.ngrams[ng] += current_doc.page_rank[word]
-            current_doc.ngrams[ng]
-        current_doc
+                    print(current_doc.ngrams[ng])
+
+
+        break;
+
+# Point 4: MRR calculation
+        gold_text = open(GOLD_PATH + filename).read()
+        tokenizer.extract_gold_ngrams(gold_text, current_doc)
+        statistics.compute_mrr(documents)
 
 
 # Point 2: Running page rank on each word graph

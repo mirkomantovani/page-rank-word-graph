@@ -1,6 +1,4 @@
-
-import graph
-
+# Mirko Mantovani
 
 class Document:
     def __init__(self, document_graph, word_count):
@@ -8,4 +6,5 @@ class Document:
         self.graph = document_graph
         self.word_count = word_count
         self.ngrams = {}
+        self.gold_ngrams = []
         self.page_rank = {}
