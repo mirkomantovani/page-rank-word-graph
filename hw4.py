@@ -29,21 +29,21 @@ for filename in list(map(str, sorted(list(map(int, [i for i in os.listdir(DOCS_P
         doc_text = open(DOCS_PATH + filename).read()
 
         # Point 1: word graph creation from documents
-        print('Point 1: word graph creation from documents')
+        # print('Point 1: word graph creation from documents')
         documents.append(tokenizer.tokenize(doc_text, vocabulary))
         current_doc = documents[-1:][0]
 
         # Point 2: Running page rank on each word graph
-        print('Point 2: Running page rank on each word graph')
+        # print('Point 2: Running page rank on each word graph')
         current_doc.page_rank = pageranker.page_rank(current_doc.graph, p_rank_max_iterations)
 
         # Point 3: generating ngrams (1,2,3)grams and scoring them with the sum of the scores the page rank provides
-        print('Point 3: generating ngrams (1,2,3)grams')
+        # print('Point 3: generating ngrams (1,2,3)grams')
         for n in range(1, 4):
             tokenizer.extract_ngrams(doc_text, current_doc, n)
 
         # Computing scores
-        print('Point 3: computing scores')
+        # print('Point 3: computing scores')
         for ng in current_doc.ngrams:
             print(ng)
             words = ng.split(' ')
@@ -53,13 +53,13 @@ for filename in list(map(str, sorted(list(map(int, [i for i in os.listdir(DOCS_P
                     current_doc.ngrams[ng] += current_doc.page_rank[word]
                     print(current_doc.ngrams[ng])
 
-
-        break;
-
-# Point 4: MRR calculation
+        # Point 4: MRR calculation
         gold_text = open(GOLD_PATH + filename).read()
         tokenizer.extract_gold_ngrams(gold_text, current_doc)
-        statistics.compute_mrr(documents)
+
+        # break;
+
+statistics.compute_mrr(documents)
 
 
 # Point 2: Running page rank on each word graph
