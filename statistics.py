@@ -3,6 +3,11 @@ from heapq import nlargest
 
 
 def compute_mrr(documents, with_tf_idf=False):
+    print()
+    if with_tf_idf:
+        print("Computing MRR with TF-IDF")
+    else:
+        print("Computing MRR")
     MRR = {}
     for k in range(1, 11):
         # print(k)
@@ -25,9 +30,10 @@ def compute_mrr(documents, with_tf_idf=False):
             if rankd:
                 MRR[k] = MRR[k] + 1 / rankd
         MRR[k] = MRR[k] / len(documents)
-        print('MRR when looking at the top {} words: {}'.format(k, MRR[k]))
-        with open('MRR.txt', 'a') as text_file:
-            text_file.write('{}\n'.format(MRR[k]))
+        if with_tf_idf:
+            print('Using top-{} words, MRR using TF-IDF: {}'.format(k, MRR[k]))
+        else:
+            print('Using top-{} ngrams, MRR: {}'.format(k, MRR[k]))
 
 
 def compute_tf_idf(idf, documents):

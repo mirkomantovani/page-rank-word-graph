@@ -55,7 +55,8 @@ class CustomTokenizer:
             ng = ''
             for token in tokens:
                 t = self.stemmer.stem(token.lower())
-                ng += t+' '
+                if t not in self.stop_words:
+                    ng += t+' '
             ng = ng[:-1]
             if ng:
                 # define new ngram for document and set to 0 its initial score
