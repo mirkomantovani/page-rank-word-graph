@@ -45,25 +45,30 @@ class CustomTokenizer:
                 # define new ngram for document and set to 0 its initial score
                 document.ngrams[ng] = 0
 
+# maybe also remove stopwords here since there was an 'and'
+#     hypertext / hypermedia in 19653
     def extract_gold_ngrams(self, doc_text, document):
-        lines = [line.rstrip('\n') for line in doc_text]
+        lines = doc_text.split('\n')
+        lines = lines[:-1]
         for line in lines:
             tokens = line.split(' ')
             ng = ''
-        for token in tokens:
-            t = self.stemmer.stem(token.lower())
-            ng += t+' '
-        ng = ng[:-1]
-        if ng:
-            # define new ngram for document and set to 0 its initial score
-            document.gold_ngrams.append(ng)
+            for token in tokens:
+                t = self.stemmer.stem(token.lower())
+                ng += t+' '
+            ng = ng[:-1]
+            if ng:
+                # define new ngram for document and set to 0 its initial score
+                document.gold_ngrams.append(ng)
+        #         print(ng)
+        # print(document.gold_ngrams)
 
 
     """
     Tokenizes a document and builds the word graph
     """
-    def tokenize(self, doc_text, vocabulary):
-        word_count = {}
+    def tokenize(self, doc_text, idf):
+        tf = {}
         G = graph.UndirectedGraph()
         tokens_in_window = []
         tokens = doc_text.split()
@@ -77,15 +82,15 @@ class CustomTokenizer:
             token = self.stemmer.stem(token)
             if not token:
                 continue
-            if token not in word_count:
-                if token not in vocabulary:
-                    vocabulary[token] = 1
+            if token not in tf:
+                if token not in idf:
+                    idf[token] = 1
                 else:
-                    vocabulary[token] += 1
+                    idf[token] += 1
                 G.add_node(token)
-                word_count[token] = 1
+                tf[token] = 1
             else:
-                word_count[token] += 1
+                tf[token] += 1
             if tokens_in_window:
                 for token_in_window in tokens_in_window:
                     edge_weight = G.get_edge(token_in_window, token)
@@ -97,7 +102,7 @@ class CustomTokenizer:
             if len(tokens_in_window) > self.window:
                 tokens_in_window = tokens_in_window[1:]
 
-        return document.Document(G, word_count)
+        return document.Document(G, tf)
 
 
 # removing digits and returning the word

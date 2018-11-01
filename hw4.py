@@ -4,14 +4,15 @@ import preprocess
 import page_rank
 import statistics
 import os
+import math
 
 STOP_WORDS_PATH = "./stopwords.txt"
 DOCS_PATH = './www/abstracts/'
 GOLD_PATH = './www/gold/'
 
 documents = []
-vocabulary = {}
-p_rank_max_iterations = 10
+idf = {}
+p_rank_max_iterations = 20
 
 # Point 1: word graph creation from documents
 tokenizer = preprocess.CustomTokenizer(STOP_WORDS_PATH)
@@ -25,17 +26,22 @@ pageranker = page_rank.PageRank()
 # for filename in sorted(list(map(int, [i for i in os.listdir(DOCS_PATH) if not i.startswith(".")]))):
 #     print(filename)
 
-for filename in list(map(str, sorted(list(map(int, [i for i in os.listdir(DOCS_PATH) if not i.startswith(".")]))))):
+# for filename in list(map(str, sorted(list(map(int, [i for i in os.listdir(DOCS_PATH) if not i.startswith(".")]))))):
+# for filename in os.listdir(DOCS_PATH):
+for filename in os.listdir(DOCS_PATH):
+    if not filename.startswith('.'):
         doc_text = open(DOCS_PATH + filename).read()
 
         # Point 1: word graph creation from documents
         # print('Point 1: word graph creation from documents')
-        documents.append(tokenizer.tokenize(doc_text, vocabulary))
+        documents.append(tokenizer.tokenize(doc_text, idf))
         current_doc = documents[-1:][0]
 
         # Point 2: Running page rank on each word graph
         # print('Point 2: Running page rank on each word graph')
         current_doc.page_rank = pageranker.page_rank(current_doc.graph, p_rank_max_iterations)
+        # print(filename)
+        # print(current_doc.page_rank)
 
         # Point 3: generating ngrams (1,2,3)grams and scoring them with the sum of the scores the page rank provides
         # print('Point 3: generating ngrams (1,2,3)grams')
@@ -45,13 +51,15 @@ for filename in list(map(str, sorted(list(map(int, [i for i in os.listdir(DOCS_P
         # Computing scores
         # print('Point 3: computing scores')
         for ng in current_doc.ngrams:
-            print(ng)
+            # print(ng)
             words = ng.split(' ')
-            print(words)
+            # print(words)
             for word in words:
                 if word in current_doc.page_rank:
                     current_doc.ngrams[ng] += current_doc.page_rank[word]
-                    print(current_doc.ngrams[ng])
+            # print(ng)
+            # print(current_doc.ngrams[ng])
+                    # print(current_doc.ngrams[ng])
 
         # Point 4: MRR calculation
         gold_text = open(GOLD_PATH + filename).read()
@@ -59,7 +67,17 @@ for filename in list(map(str, sorted(list(map(int, [i for i in os.listdir(DOCS_P
 
         # break;
 
+# Computing idf
+for i in idf:
+    idf[i] = math.log(len(documents) / idf[i], 2)
+# Computing tf-idf
+statistics.compute_tf_idf(idf, documents)
+
+# Point 4: Computing and printing MRR
 statistics.compute_mrr(documents)
+
+# Point 5: Computing and printing MRR based on tf-idf
+statistics.compute_mrr(documents, with_tf_idf=True)
 
 
 # Point 2: Running page rank on each word graph
