@@ -45,8 +45,6 @@ class CustomTokenizer:
                 # define new ngram for document and set to 0 its initial score
                 document.ngrams[ng] = 0
 
-# maybe also remove stopwords here since there was an 'and'
-#     hypertext / hypermedia in 19653
     def extract_gold_ngrams(self, doc_text, document):
         lines = doc_text.split('\n')
         lines = lines[:-1]
@@ -61,8 +59,6 @@ class CustomTokenizer:
             if ng:
                 # define new ngram for document and set to 0 its initial score
                 document.gold_ngrams.append(ng)
-        #         print(ng)
-        # print(document.gold_ngrams)
 
 
     """

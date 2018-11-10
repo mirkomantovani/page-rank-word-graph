@@ -17,6 +17,7 @@ def run_program():
     documents = []
     idf = {}
     p_rank_max_iterations = 20
+
     # Point 1: word graph creation from documents
     tokenizer = preprocess.CustomTokenizer(STOP_WORDS_PATH)
     pageranker = page_rank.PageRank()
@@ -32,8 +33,6 @@ def run_program():
             # Point 2: Running page rank on each word graph
             # print('Point 2: Running page rank on each word graph')
             current_doc.page_rank = pageranker.page_rank(current_doc.graph, p_rank_max_iterations)
-            # print(filename)
-            # print(current_doc.page_rank)
 
             # Point 3: generating ngrams (1,2,3)grams and scoring them with the sum of the scores the page rank provides
             # print('Point 3: generating ngrams (1,2,3)grams')
@@ -43,9 +42,7 @@ def run_program():
             # Computing scores
             # print('Point 3: computing scores')
             for ng in current_doc.ngrams:
-                # print(ng)
                 words = ng.split(' ')
-                # print(words)
                 for word in words:
                     if word in current_doc.page_rank:
                         current_doc.ngrams[ng] += current_doc.page_rank[word]
@@ -62,9 +59,7 @@ def run_program():
         current_doc.ngrams_tf_idf = current_doc.ngrams.copy()
         for ng in current_doc.ngrams_tf_idf:
             current_doc.ngrams_tf_idf[ng] = 0
-            # print(ng)
             words = ng.split(' ')
-            # print(words)
             for word in words:
                 if word in current_doc.tf_idf:
                     current_doc.ngrams_tf_idf[ng] += current_doc.tf_idf[word]
@@ -75,9 +70,9 @@ def run_program():
 
 
 if __name__ == "__main__":
-    STOP_WORDS_PATH = sys.argv[1]
-    DOCS_PATH = sys.argv[2]
-    GOLD_PATH = sys.argv[3]
+    if len(sys.argv) == 3:
+        STOP_WORDS_PATH = sys.argv[1]
+        DOCS_PATH = sys.argv[2]
+        GOLD_PATH = sys.argv[3]
     run_program()
-
 

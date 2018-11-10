@@ -1,4 +1,5 @@
-import document
+# Mirko Mantovani
+
 from heapq import nlargest
 
 
@@ -10,24 +11,17 @@ def compute_mrr(documents, with_tf_idf=False):
         print("Computing MRR")
     MRR = {}
     for k in range(1, 11):
-        # print(k)
-        # print()
         MRR[k] = 0
         i=0
         for doc in documents:
             i=i+1
-            #print(i)
             if with_tf_idf:
                 top = nlargest(k, doc.ngrams_tf_idf, key=doc.ngrams_tf_idf.get)
             else:
                 top = nlargest(k, doc.ngrams, key=doc.ngrams.get)
             rankd = 0
-            # print(doc)
-            # print(top)
             for index, t in enumerate(top):
-                # print("is "+t + "in " + str(doc.gold_ngrams))
                 if t in doc.gold_ngrams:
-                    # print(t + " is in " + str(doc.gold_ngrams))
                     rankd = index +1
                     break
             if rankd:

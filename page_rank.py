@@ -1,3 +1,5 @@
+# Mirko Mantovani
+
 import sys
 sys.setrecursionlimit(1500)
 
@@ -26,9 +28,6 @@ class PageRank:
             for i in word_graph.graph:
                 page_rank[i] = self.s(word_graph,i, p, last_page_rank)
             #normalization and updating steps
-            # total_weight = sum(page_rank[i]**2 for i in page_rank)**(1/2)
             for i in page_rank:
-                # ??
-                # page_rank[i] = page_rank[i] / total_weight
                 last_page_rank[i] = page_rank[i]
         return page_rank
