@@ -7,5 +7,7 @@ class Document:
         self.tf = tf
         self.tf_idf = {}
         self.ngrams = {}
+        #same as ngrams but the value (score( is based on tf-idf
+        self.ngrams_tf_idf = {}
         self.gold_ngrams = []
         self.page_rank = {}

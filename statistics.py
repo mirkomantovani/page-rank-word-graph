@@ -13,9 +13,12 @@ def compute_mrr(documents, with_tf_idf=False):
         # print(k)
         # print()
         MRR[k] = 0
+        i=0
         for doc in documents:
+            i=i+1
+            #print(i)
             if with_tf_idf:
-                top = nlargest(k, doc.tf_idf, key=doc.tf_idf.get)
+                top = nlargest(k, doc.ngrams_tf_idf, key=doc.ngrams_tf_idf.get)
             else:
                 top = nlargest(k, doc.ngrams, key=doc.ngrams.get)
             rankd = 0
