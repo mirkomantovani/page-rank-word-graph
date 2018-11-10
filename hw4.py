@@ -22,7 +22,7 @@ def run_program():
     tokenizer = preprocess.CustomTokenizer(STOP_WORDS_PATH)
     pageranker = page_rank.PageRank()
     for filename in os.listdir(DOCS_PATH):
-        if not filename.startswith('.'):
+        if not filename.startswith('.') and filename in os.listdir(GOLD_PATH):
             doc_text = open(DOCS_PATH + filename).read()
 
             # Point 1: word graph creation from documents

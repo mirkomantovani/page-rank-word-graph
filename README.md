@@ -1,6 +1,5 @@
 # Information Retrieval HW4
 ### Mirko Mantovani, 10 November 2018
-___
 
 Homework 4 for the CS 582 Information Retrieval course at University of Illinois at Chicago
 
@@ -15,12 +14,49 @@ replacing the 3 arguments with the paths to your files to:
 * Stop words
 * Documents
 * Gold standards
+
+---
+## Scripts
+---
+### hw4.py
+The main program which controls the workflow of the scripts
+
+### document.py
+
+Document class which stores the word graph, tf-idf and page rank scores and ngrams
+
+### graph.py
+
+Graph class, an implementation of an undirected graph
+
+### page_rank.py
+
+Runs the page rank algorithm on a word graph
+
+### preprocess.py
+
+Contains custom tokenizer and functions to tokenize docs and golds
+
+### statistics.py
+
+Computes MRR and tf-idf
+
+---
+## Implementation choices
+---
+
+* Documents that do not have gold standards are not considered.
+* Two words which are separated by a comma or a dot are not considered adjacent
+* The tf-idf for ngrams are calculated by summing up the tf-idf scores of each single word belonging to the ngram
+
+
 ---
 ## Results
 ---
 The obtained results are: 
 
-MRR with page rank
+MRR with page rank:
+
 Using top-1 ngrams, MRR: 0.061654135338345864  
 Using top-2 ngrams, MRR: 0.08984962406015037  
 Using top-3 ngrams, MRR: 0.11040100250626562  
@@ -32,7 +68,8 @@ Using top-8 ngrams, MRR: 0.168821160042964
 Using top-9 ngrams, MRR: 0.1730818116720367  
 Using top-10 ngrams, MRR: 0.17631489437880352  
 
-MRR with tf-idf
+MRR with tf-idf:
+
 Using top-1 words, MRR using TF-IDF: 0.07819548872180451  
 Using top-2 words, MRR using TF-IDF: 0.11842105263157894  
 Using top-3 words, MRR using TF-IDF: 0.14448621553884727  
